@@ -1,129 +1,113 @@
 # TOPSIS Implementation in Python (Command Line Program)
 
-## 1. Project Description
+## Project Overview
 
-This project implements the **TOPSIS (Technique for Order Preference by Similarity to Ideal Solution)** method using Python.  
-The program is designed as a **command-line application** that ranks multiple alternatives based on several criteria.
+This project implements the **TOPSIS (Technique for Order Preference by Similarity to Ideal Solution)** method using Python. The application is developed as a **command-line program** that evaluates and ranks multiple alternatives based on multiple decision criteria.
 
-TOPSIS works on the principle that the best alternative should have the **shortest distance from the ideal best solution** and the **farthest distance from the ideal worst solution**.
+The TOPSIS method is based on the principle that the best alternative should be **closest to the ideal best solution** and **farthest from the ideal worst solution**. This method is widely used in multi-criteria decision-making problems involving conflicting criteria.
 
-The implementation supports:
+The program supports:
 - Any number of decision criteria
 - User-defined weights and impacts
-- CSV and Excel input files
-- Proper input validation and error handling
+- Input files in CSV or Excel format
+- Robust input validation and error handling
 
 ---
 
-## 2. How to Run the Program
+## Program Execution
 
-### Command Format
+### Command-Line Syntax
 ```bash
 python topsis.py <InputFile> <Weights> <Impacts> <OutputFile>
 
-## Example
+```
+
+###  Example Execution
+```bash
 python topsis.py data.csv "1,1,1,2,1" "+,+,-,+,+" output-result.csv
+```
+## Input File Specification
+The first column must contain the names or identifiers of the alternatives.
 
-3. Input File Format
+All remaining columns represent criteria values.
 
-The first column contains the names of alternatives (e.g., Fund Name)
+Criteria columns must contain numeric values only.
 
-Columns from second to last represent criteria values
+The input file must contain at least three columns.
 
-All criteria columns must be numeric
+### Sample Input Data
+| Fund | P1 | P2 | P3 | P4 | P5 |
+|------|----|----|----|----|----|
+| M1 | 0.67 | 0.45 | 6.5 | 42.6 | 12.56 |
+| M2 | 0.60 | 0.36 | 3.6 | 53.3 | 14.47 |
 
-Minimum of three columns is required
+## Methodology
+The TOPSIS algorithm is executed through the following steps:
 
-Sample Input Table
-Fund	P1	P2	P3	P4	P5
-M1	0.67	0.45	6.5	42.6	12.56
-M2	0.60	0.36	3.6	53.3	14.47
-4. Methodology
-
-The TOPSIS algorithm follows the steps below:
-
-Step 1: Decision Matrix
-
+### Step 1: Construction of the Decision Matrix
 The criteria values (excluding the first column) form the decision matrix.
 
-Step 2: Normalization
-
-Each criterion is normalized using vector normalization:
-
-r_ij = x_ij / sqrt(sum(x_ij^2))
+### Step 2: Normalization
+Each criterion is normalized using vector normalization to eliminate the effect of differing units:
 
 
-This ensures all criteria are comparable.
+     r_ij = x_ij / sqrt(∑ x_ij²)
 
-Step 3: Weighted Normalized Matrix
+### Step 3: Weighted Normalized Decision Matrix
+The normalized values are multiplied by their respective weights:
 
-Each normalized value is multiplied by its corresponding weight:
 
-v_ij = r_ij × w_j
+    v_ij = r_ij × w_j
+### Step 4: Determination of Ideal Solutions
+#### Benefit (+) criteria
 
-Step 4: Ideal Best and Ideal Worst Solutions
+Ideal Best: maximum value
 
-For benefit (+) criteria:
+Ideal Worst: minimum value
 
-Ideal Best → maximum value
+#### Cost (-) criteria
 
-Ideal Worst → minimum value
+Ideal Best: minimum value
 
-For cost (-) criteria:
+Ideal Worst: maximum value
 
-Ideal Best → minimum value
+### Step 5: Distance Measures
+The Euclidean distance of each alternative from the ideal best and ideal worst solutions is calculated:
 
-Ideal Worst → maximum value
-
-Step 5: Distance Calculation
-
-Euclidean distances from ideal best and ideal worst are calculated:
-
-D+ = sqrt(sum((v_ij − v_j+)²))
-D− = sqrt(sum((v_ij − v_j−)²))
-
-Step 6: TOPSIS Score
-
+    D+ = sqrt(∑ (v_ij − v_j+)²)
+    D− = sqrt(∑ (v_ij − v_j−)²)
+### Step 6: TOPSIS Score Calculation
 The relative closeness to the ideal solution is computed as:
 
-TOPSIS Score = D− / (D+ + D−)
+    TOPSIS Score = D− / (D+ + D−)
+A higher score indicates a more preferable alternative.
 
+### Step 7: Ranking of Alternatives
+Alternatives are ranked in descending order of their TOPSIS scores.
 
-A higher score indicates a better alternative.
-
-Step 7: Ranking
-
-Alternatives are ranked in descending order of TOPSIS score.
-
-5. Output Format
-
+#### Output Description
 The output file contains the original input data along with two additional columns:
 
-Column Name	Description
-Topsis Score	Relative closeness to the ideal solution
-Rank	Final ranking (Rank 1 = best alternative)
-Sample Output
-Fund	P1	P2	P3	P4	P5	Topsis Score	Rank
-M5	0.76	0.58	4.8	43.0	12.29	0.85	1
-M1	0.67	0.45	6.5	42.6	12.56	0.73	2
-6. Result Graph (Optional)
+Topsis Score(	Relative closeness of the alternative to the ideal solution)
+Rank	Final ranking (Rank 1 indicates the best alternative)
 
-A bar graph can be plotted using the TOPSIS scores to visually compare the ranking of alternatives.
-Higher bars represent better-performing alternatives.
+| Fund | P1 | P2 | P3 | P4 | P5 | Topsis Score | Rank |
+|------|----|----|----|----|----|--------------|------|
+| M5 | 0.76 | 0.58 | 4.8 | 43.0 | 12.29 | 0.85 | 1 |
+| M1 | 0.67 | 0.45 | 6.5 | 42.6 | 12.56 | 0.73 | 2 |
 
-7. Key Features
 
+
+### Key Features
 Fully command-line based implementation
 
-Supports any number of criteria
+Supports any number of decision criteria
 
-Handles invalid inputs gracefully
+Robust error checking and input validation
 
-Compatible with CSV and Excel files
+Compatible with both CSV and Excel input files
 
-Suitable for academic assignments and practical applications
+### Conclusion
+This project provides a complete and adaptable implementation of the TOPSIS method for multi-criteria decision analysis. By systematically evaluating alternatives against ideal best and ideal worst solutions, the program enables effective and rational ranking for complex decision-making scenarios.
 
-8. Conclusion
 
-This project demonstrates a complete and flexible implementation of the TOPSIS decision-making technique.
-The program efficiently ranks alternatives by considering both the best and worst possible scenarios, making it suitable for real-world multi-criteria decision analysis problems.
